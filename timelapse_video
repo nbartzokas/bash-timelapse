@@ -6,12 +6,14 @@ MAX_FILES=2700
 LOGLEVEL=quiet
 INPUT_DIR=~/timelapse/photos
 OUTPUT_DIR=~/timelapse/video
+FULL_SCALE=1280x720
+THUMB_SCALE=320:180
 
 # echo clear old files, cap at MAX_FILES images
 find "${INPUT_DIR}" -type f | sort -r | tail -n +${MAX_FILES} | xargs -d '\n' rm 2>/dev/null
 
 # echo make full res timelapse video, ${OUTPUT_DIR}.mp4
-ffmpeg -loglevel ${LOGLEVEL} -y -pix_fmt yuv420p -s 1280x720 -pattern_type glob -i "${INPUT_DIR}/*.jpg" -c:v libx264 "${OUTPUT_DIR}.mp4"
+ffmpeg -loglevel ${LOGLEVEL} -y -pix_fmt yuv420p -s $FULL_SCALE -pattern_type glob -i "${INPUT_DIR}/*.jpg" -c:v libx264 "${OUTPUT_DIR}.mp4"
 
 # echo make low res version in public/video/${OUTPUT_DIR}-thumb.mp4
-ffmpeg -loglevel ${LOGLEVEL} -y -i "${OUTPUT_DIR}.mp4" -vf scale=320:180 "${OUTPUT_DIR}-thumb.mp4"
+ffmpeg -loglevel ${LOGLEVEL} -y -i "${OUTPUT_DIR}.mp4" -vf scale=$THUMB_SCALE "${OUTPUT_DIR}-thumb.mp4"
