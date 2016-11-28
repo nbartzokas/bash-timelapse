@@ -2,13 +2,15 @@
 
 BASH scripts that take timelapse photography as JPGs and assembles them into an fullsized and thumbnail MP4.
 
-`timelapse_photo` takes photos using `fswebcam` and deletes old photos maintaining a maximum number of files and a minimum amount of hard drive space.
-
 ### Timelapse photo capture
 
-- To install the prerequisite, `fswebcam`, execute the following or equivalent:
+`timelapse_photo` takes photos using `fswebcam` and deletes old photos maintaining a maximum number of files and a minimum amount of hard drive space.
+
+##### usage
+
+- To install the prerequisite, `fswebcam`, execute the following (or equivalent):
 	
-		sudo apt-get fswebcam`
+		sudo apt-get install fswebcam
 
 - Edit `timelapse_photo` specifying the desired photo directory, photo resolution, maximum number of photos, minimum hard drive capacity, and camera rotation (orientation in degrees).
 
@@ -20,6 +22,17 @@ BASH scripts that take timelapse photography as JPGs and assembles them into an 
 		
 ### Timelapse video creation
 
-- Edit `timelapse_video` specifying the photo directory and desired output directory.
+`timelapse_video` converts a JPG sequence of timelapse photos and 
+using `fswebcam` and deletes old photos maintaining a maximum number of files and a minimum amount of hard drive space.
 
-- Execute: `timelapse_video`
+##### usage
+
+- To install the prerequisite, `ffmpeg`, execute the following (or equivalent):
+	
+		sudo apt-get install ffmpeg
+		
+- Edit `timelapse_video` specifying the photo directory, desired output directory, and aspect ratios.
+
+- Execute: 
+
+		./timelapse_video
