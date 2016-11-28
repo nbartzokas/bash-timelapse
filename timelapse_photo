@@ -1,0 +1,33 @@
+#!/bin/bash
+# Nick Bartzokas
+# October 2014
+
+PHOTO_DIR=~/timelapse/photos
+CAPACITY=95
+RESOLUTION=1280x720
+ROTATION=0
+MAX_FILES=2700
+
+# Make sure $PHOTO_DIR exists
+mkdir -p $PHOTO_DIR
+
+# Delete oldest files over MAX_FILES files
+find $PHOTO_DIR -type f | sort -r | tail -n +${MAX_FILES} | xargs -d '\n' rm 2>/dev/null
+
+# While filesystem is over $CAPACITY % full, delete oldest photo
+while [ $(df -P $PHOTO_DIR | awk '{ gsub("%",""); capacity = $5 }; END { print capacity }') -gt $CAPACITY ]
+do
+    #echo Filesystem is over $CAPACITY percent full
+    if [ "$(ls -A photos)" ]
+    then
+        #echo Deleting oldest photo in $PHOTO_DIR, $(ls $PHOTO_DIR | head -n 1) 
+        rm $PHOTO_DIR/$(ls $PHOTO_DIR | head -n 1)
+    else
+        #echo No photos found in $PHOTO_DIR
+        break
+    fi
+done
+
+# Take photo
+# The frames, skip, and delay settings are calibrated for Logitech C-920 Cameras to allow their autofocus to complete
+fswebcam --jpeg 80 -q --rotate $ROTATION --no-banner --frames 10 --skip 150 --delay 10 -d /dev/video0 -r $RESOLUTION $PHOTO_DIR/$(date +%Y%m%d%H%M%S).jpg 

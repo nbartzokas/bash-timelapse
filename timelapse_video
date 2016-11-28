@@ -1,0 +1,17 @@
+#!/bin/bash
+# Nick Bartzokas
+# October 2014
+
+MAX_FILES=2700
+LOGLEVEL=quiet
+INPUT_DIR=~/timelapse/photos
+OUTPUT_DIR=~/timelapse/video
+
+# echo clear old files, cap at MAX_FILES images
+find "${INPUT_DIR}" -type f | sort -r | tail -n +${MAX_FILES} | xargs -d '\n' rm 2>/dev/null
+
+# echo make full res timelapse video, ${OUTPUT_DIR}.mp4
+ffmpeg -loglevel ${LOGLEVEL} -y -pix_fmt yuv420p -s 1280x720 -pattern_type glob -i "${INPUT_DIR}/*.jpg" -c:v libx264 "${OUTPUT_DIR}.mp4"
+
+# echo make low res version in public/video/${OUTPUT_DIR}-thumb.mp4
+ffmpeg -loglevel ${LOGLEVEL} -y -i "${OUTPUT_DIR}.mp4" -vf scale=320:180 "${OUTPUT_DIR}-thumb.mp4"
